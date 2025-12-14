@@ -7,13 +7,13 @@ const TransactionHistory = ({ account }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // TODO: Implement fetchTransactions function
   useEffect(() => {
     const fetchTransactions = async () => {
       setLoading(true);
+      setError(null);
       try {
-        // TODO: Call apiService.getTransactions with account address if available
-        // TODO: Update transactions state
+        const response = await apiService.getTransactions(account, 20);
+        setTransactions(response.transactions || []);
       } catch (err) {
         setError(err.message);
       } finally {
@@ -30,8 +30,7 @@ const TransactionHistory = ({ account }) => {
   };
 
   const formatDate = (timestamp) => {
-    // TODO: Format the timestamp to a readable date
-    return timestamp;
+    return new Date(timestamp).toLocaleString();
   };
 
   if (loading) {
@@ -61,14 +60,41 @@ const TransactionHistory = ({ account }) => {
         )}
       </div>
 
-      {/* TODO: Display transactions list */}
-      {/* Show: type, from, to, amount, currency, status, timestamp, blockchainTxHash */}
       <div className="transactions-list">
-        {/* Your implementation here */}
-        <div className="placeholder">
-          <p>Transaction list will be displayed here</p>
-          <p>Implement the transaction list rendering</p>
-        </div>
+        {transactions.length === 0 ? (
+          <div className="no-transactions">
+            <p>No transactions found</p>
+          </div>
+        ) : (
+          transactions.map((transaction) => (
+            <div key={transaction.id} className="transaction-card">
+              <div className="transaction-header">
+                <h3>{transaction.type}</h3>
+                <span className={`transaction-status ${transaction.status}`}>
+                  {transaction.status}
+                </span>
+              </div>
+              <div className="transaction-details">
+                <div className="transaction-addresses">
+                  <p><strong>From:</strong> {formatAddress(transaction.from)}</p>
+                  <p><strong>To:</strong> {formatAddress(transaction.to)}</p>
+                </div>
+                <div className="transaction-amount">
+                  <p><strong>Amount:</strong> {transaction.amount} {transaction.currency}</p>
+                </div>
+                <div className="transaction-meta">
+                  <p><strong>Date:</strong> {formatDate(transaction.timestamp)}</p>
+                  {transaction.blockchainTxHash && (
+                    <div className="blockchain-hash">
+                      <p><strong>Blockchain Hash:</strong></p>
+                      <code>{transaction.blockchainTxHash}</code>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+          ))
+        )}
       </div>
     </div>
   );

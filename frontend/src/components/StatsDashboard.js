@@ -7,13 +7,13 @@ const StatsDashboard = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // TODO: Implement fetchStats function
   useEffect(() => {
     const fetchStats = async () => {
       setLoading(true);
+      setError(null);
       try {
-        // TODO: Call apiService.getStats()
-        // TODO: Update stats state
+        const response = await apiService.getStats();
+        setStats(response);
       } catch (err) {
         setError(err.message);
       } finally {
@@ -44,13 +44,30 @@ const StatsDashboard = () => {
     <div className="stats-dashboard-container">
       <h2>Platform Statistics</h2>
       
-      {/* TODO: Display statistics in a nice grid layout */}
-      {/* Show: totalPatients, totalRecords, totalConsents, activeConsents, pendingConsents, totalTransactions */}
       <div className="stats-grid">
-        {/* Your implementation here */}
-        <div className="placeholder">
-          <p>Statistics will be displayed here</p>
-          <p>Implement the statistics dashboard</p>
+        <div className="stat-card">
+          <div className="stat-value">{stats.totalPatients}</div>
+          <div className="stat-label">Total Patients</div>
+        </div>
+        <div className="stat-card">
+          <div className="stat-value">{stats.totalRecords}</div>
+          <div className="stat-label">Total Records</div>
+        </div>
+        <div className="stat-card">
+          <div className="stat-value">{stats.totalConsents}</div>
+          <div className="stat-label">Total Consents</div>
+        </div>
+        <div className="stat-card">
+          <div className="stat-value">{stats.activeConsents}</div>
+          <div className="stat-label">Active Consents</div>
+        </div>
+        <div className="stat-card">
+          <div className="stat-value">{stats.pendingConsents}</div>
+          <div className="stat-label">Pending Consents</div>
+        </div>
+        <div className="stat-card">
+          <div className="stat-value">{stats.totalTransactions}</div>
+          <div className="stat-label">Total Transactions</div>
         </div>
       </div>
     </div>
